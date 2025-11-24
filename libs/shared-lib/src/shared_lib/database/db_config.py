@@ -10,5 +10,6 @@ class DBConfig(BaseModel):
 
 def get_settings () -> DBConfig:
     return DBConfig(
-        DATABASE_URL= os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/fast-api")
+        DATABASE_URL=os.getenv(
+            "DATABASE_URL", "postgresql+asyncpg://fast-api:test1234@localhost:5432/fast-api")
     )
