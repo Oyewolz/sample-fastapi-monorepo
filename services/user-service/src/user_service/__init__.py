@@ -1,13 +1,12 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    yield
+    print("Shutting down")
+
+
 app = FastAPI(title="User Service")
-
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello from user-service!"}
-
-
-def main() -> None:
-    print("Hello from user-service!")

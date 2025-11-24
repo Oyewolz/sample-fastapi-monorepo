@@ -10,7 +10,10 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.121.3",
     "uvicorn>=0.38.0",
+    "shared-lib",
 ]
+[tool.uv.sources]
+shared-lib = {  workspace = true }
 
 [project.scripts]
 user-service = "user_service:main"

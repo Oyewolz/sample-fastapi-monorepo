@@ -1,5 +1,5 @@
 [project]
-name = "shared"
+name = "shared-lib"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -7,10 +7,9 @@ authors = [
     { name = "oyewolz", email = "oyewoletaiwo219@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
-
-[project.scripts]
-shared = "shared:main"
+dependencies = [ 
+    "asyncpg>=0.30.0",
+    ]
 
 [build-system]
 requires = ["hatchling"]

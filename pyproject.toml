@@ -4,9 +4,14 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "sqlmodel>=0.0.27",
+]
 
 [tool.uv.workspace]
 members = [
-    "libs/shared",
+    "services/user-service",
+    "services/notification-service",
+    "services/user-service/libs/shared-lib",
+    "libs/shared-lib",
 ]
