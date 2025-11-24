@@ -3,7 +3,8 @@ from sqlmodel import SQLModel
 from fastapi import FastAPI
 from shared_lib.database import engine
 # Import models so SQLModel knows about them
-from shared_lib.models import FTUser, Role
+from shared_lib.database.models import FTUser, Role
+from .config import get_config
 
 
 @asynccontextmanager
@@ -13,4 +14,7 @@ async def lifespan(app: FastAPI):
     yield
     await engine.dispose()
 
-app = FastAPI(title="User Service", lifespan=lifespan)
+app = FastAPI(title="User Service", lifespan=lifespan,
+              debug=get_config().debug,
+              host=get_config().app_host
+              )
