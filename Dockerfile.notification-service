@@ -1,0 +1,52 @@
+# ============================
+# 1. Base image (runtime)
+# ============================
+FROM python:3.12-slim AS base
+
+# Install system dependencies for asyncpg & PostgreSQL
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc libpq-dev build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv globally
+RUN pip install uv
+
+WORKDIR /app
+
+
+# ============================
+# 2. Dependency installation
+# ============================
+FROM base AS uv-build
+
+# Copy project files
+COPY pyproject.toml uv.lock ./  
+COPY services/user-service/pyproject.toml ./services/user-service/
+COPY libs ./libs
+
+# Sync dependencies (installs all shared libs + service deps)
+RUN uv sync --frozen --no-cache
+
+
+# ============================
+# 3. Final runtime image
+# ============================
+FROM base AS final
+
+WORKDIR /app
+
+# Copy the virtual environment from uv-build
+COPY --from=uv-build /app/.venv ./.venv
+
+# Copy ONLY the auth-service source code to runtime
+COPY services/auth-service/src ./src
+
+# Ensure uv uses the local .venv
+ENV VIRTUAL_ENV="/app/.venv"
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Expose FastAPI port
+EXPOSE 8000
+
+# Run the FastAPI app
+CMD ["uv", "run", "uvicorn", "auth_service.main:app", "--host", "0.0.0.0", "--port", "8000"]
