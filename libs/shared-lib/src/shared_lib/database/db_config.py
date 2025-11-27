@@ -1,15 +1,13 @@
 
 
-import os
 from pydantic import BaseModel
-
+from shared_lib.config.setting import get_settings
 
 class DBConfig(BaseModel):
      DATABASE_URL: str
 
 
-def get_settings () -> DBConfig:
+def get_db_config() -> DBConfig:
     return DBConfig(
-        DATABASE_URL=os.getenv(
-            "DATABASE_URL", "postgresql+asyncpg://fast-api:test1234@localhost:5432/fast-api")
+        DATABASE_URL=get_settings().DATABASE_URL
     )

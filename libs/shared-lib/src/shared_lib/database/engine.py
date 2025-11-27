@@ -1,9 +1,9 @@
 
 from sqlalchemy.ext.asyncio import create_async_engine
-from .db_config import get_settings
+from .db_config import get_db_config
 
-settings = get_settings()
-engine = create_async_engine(settings.DATABASE_URL, 
+db_config = get_db_config()
+engine = create_async_engine(db_config.DATABASE_URL,
                               echo=True,
                               future=True,
                               pool_size=10,
