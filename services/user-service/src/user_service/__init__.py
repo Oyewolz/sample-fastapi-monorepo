@@ -5,6 +5,7 @@ from shared_lib.database import engine
 # Import models so SQLModel knows about them
 from shared_lib.database.models import FTUser, Role
 from .config import get_config
+from .routes.user import router as user_router
 
 
 @asynccontextmanager
@@ -17,6 +18,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="User Service", lifespan=lifespan,
               debug=get_config().debug
               )
+
+app.include_router(user_router, prefix="/users", tags=["users"])
 
 
 @app.get("/")

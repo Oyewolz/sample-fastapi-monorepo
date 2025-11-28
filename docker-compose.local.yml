@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.user-service
-    command: ["uv", "run", "--directory", "services/user-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9000", "-m", "uvicorn","user_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
+    command: ["uv", "run", "--directory", "services/user-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9000", "-m", "uvicorn","user_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload", "--reload-dir", "/app/services/user-service/src", "--reload-dir", "/app/libs/shared-lib/src"]
     ports:
       - "8000:8000"
       - "9000:9000"
@@ -17,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.notification-service
-    command: ["uv", "run", "--directory", "services/notification-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9001", "-m", "uvicorn","notification_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
+    command: ["uv", "run", "--directory", "services/notification-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9001", "-m", "uvicorn","notification_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload", "--reload-dir", "/app/services/notification-service/src", "--reload-dir", "/app/libs/shared-lib/src"]
     ports:
       - "8001:8000"
       - "9001:9001"
