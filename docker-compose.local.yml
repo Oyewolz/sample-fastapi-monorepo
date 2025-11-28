@@ -1,22 +1,29 @@
 services:
-  simple_postgres:
-    image: postgres:14.1-alpine
-    container_name: fast_api_db
-    restart: always
-    environment:
-      POSTGRES_USER: fast-api
-      POSTGRES_PASSWORD: test1234
-      POSTGRES_DB: fast-api
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.user-service
+    command: ["uv", "run", "--directory", "services/user-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9000","--wait-for-client", "-m", "uvicorn","user_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
     ports:
-      - 5432:5432
-    volumes:
-      - simple_postgres_data:/var/lib/postgresql/data
+      - "8000:8000"
+      - "9000:9000"
+    env_file: .env
     networks:
       - fast-api-network
-
+    volumes:
+      - .:/usr/src/app
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.notification-service
+    command: ["uv", "run", "--directory", "services/notification-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9001","--wait-for-client", "-m", "uvicorn","notification_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
+    ports:
+      - "8001:8000"
+      - "9001:9001"
+    env_file: .env
+    networks:
+      - fast-api-network
+        
 networks:
   fast-api-network:
     driver: bridge
-
-volumes:
-  simple_postgres_data:

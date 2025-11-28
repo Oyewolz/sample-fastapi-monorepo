@@ -1,0 +1,15 @@
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.user-service
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    env_file: .env
+    networks:
+      - fast-api-network
+
+networks:
+  fast-api-network:
+    driver: bridge

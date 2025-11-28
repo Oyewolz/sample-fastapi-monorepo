@@ -38,8 +38,15 @@ WORKDIR /app
 # Copy the virtual environment from uv-build
 COPY --from=uv-build /app/.venv ./.venv
 
-# Copy ONLY the auth-service source code to runtime
-COPY services/auth-service/src ./src
+# Copy project files needed for uv run
+COPY --from=uv-build /app/pyproject.toml /app/uv.lock ./
+COPY --from=uv-build /app/services/user-service/pyproject.toml ./services/user-service/
+# readme is referenced in the project toml file 
+COPY services/user-service/README.md ./services/user-service/ 
+COPY --from=uv-build /app/libs ./libs
+
+# Copy ONLY the user-service source code to runtime
+COPY services/user-service/src ./services/user-service/src
 
 # Ensure uv uses the local .venv
 ENV VIRTUAL_ENV="/app/.venv"
@@ -49,4 +56,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
 # Run the FastAPI app
-CMD ["uv", "run", "uvicorn", "auth_service.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "--directory", "services/user-service", "uvicorn", "user_service:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -8,4 +8,5 @@ class Config(Settings):
 
 @LRU_cache(maxsize=1)  # Cache one instance; maxsize=1 enforces singleton
 def get_config() -> Config:
+    print("Loading config")
     return Config() 

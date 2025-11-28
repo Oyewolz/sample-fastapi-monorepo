@@ -17,3 +17,13 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="User Service", lifespan=lifespan,
               debug=get_config().debug
               )
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello from user-service!"}
+
+
+@app.on_event("startup")
+async def startup_event():
+    print("Starting user-service...")
