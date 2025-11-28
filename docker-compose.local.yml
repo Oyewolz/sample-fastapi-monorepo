@@ -3,24 +3,28 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.user-service
-    command: ["uv", "run", "--directory", "services/user-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9000","--wait-for-client", "-m", "uvicorn","user_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
+    command: ["uv", "run", "--directory", "services/user-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9000", "-m", "uvicorn","user_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
     ports:
       - "8000:8000"
       - "9000:9000"
     env_file: .env
+    volumes:
+      - .:/app
+      - /app/.venv
     networks:
       - fast-api-network
-    volumes:
-      - .:/usr/src/app
   notification-service:
     build:
       context: .
       dockerfile: Dockerfile.notification-service
-    command: ["uv", "run", "--directory", "services/notification-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9001","--wait-for-client", "-m", "uvicorn","notification_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
+    command: ["uv", "run", "--directory", "services/notification-service", "python", "-m", "debugpy","--listen", "0.0.0.0:9001", "-m", "uvicorn","notification_service:app","--host", "0.0.0.0",  "--port", "8000", "--reload"]
     ports:
       - "8001:8000"
       - "9001:9001"
     env_file: .env
+    volumes:
+      - .:/app
+      - /app/.venv
     networks:
       - fast-api-network
         
