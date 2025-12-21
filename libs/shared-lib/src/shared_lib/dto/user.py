@@ -15,6 +15,4 @@ class UserLoginDto(BaseModel):
 
 
 class AuthResponse(BaseModel): 
-    first_name: str
-    last_name: str
     access_token: str

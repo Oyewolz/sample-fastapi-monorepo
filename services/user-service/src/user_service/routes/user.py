@@ -19,8 +19,8 @@ async def register_user(user: UserDto, session: AsyncSession = Depends(get_sessi
 
 @router.post("/login", response_model=ApiResponse[AuthResponse]) 
 async def login_user( user: UserLoginDto, session: AsyncSession = Depends(get_session)): 
-    await user_service.login_user(user, session)
-    return ApiResponse(data=user, message="User logged in successfully")
+    access_token = await user_service.login_user(user, session)
+    return ApiResponse(data=access_token, message="User logged in successfully")
 
 @router.get("/{user_id}", response_model=ApiResponse[UserDto]) 
 async def get_user( user_id: int, session: AsyncSession = Depends(get_session)): 

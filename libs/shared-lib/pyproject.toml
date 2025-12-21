@@ -12,6 +12,7 @@ dependencies = [
     "greenlet>=3.2.4",
     "sqlalchemy>=2.0.44",
     "sqlmodel>=0.0.27",
+    "python-jose[cryptography]>=3.5.0",
 ]
 
 [build-system]

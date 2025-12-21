@@ -1,4 +1,5 @@
 
+from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException
 from shared_lib.database.models.user.ft_user import FTUser
 from shared_lib.dto.user import UserDto, UserLoginDto
@@ -6,6 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from passlib.context import CryptContext
 from passlib.hash import bcrypt
+from jose import jwt
+from shared_lib.auth.jwt_auth import JWTAuth
+
+from user_service.config import get_config
 
 class UserService: 
 
@@ -37,11 +42,17 @@ class UserService:
         user = result.scalars().first()
         if not user:
             raise HTTPException(status_code=400, detail="User not found")
-        if self.hash_password(userDto.password) != user.password:
+        if not bcrypt.verify(userDto.password, user.password):
             raise HTTPException(status_code=400, detail="Invalid password")
-        
-        del user.password
-        return user
+
+        jwt_data = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email
+        }
+        token = JWTAuth.create_access_token(jwt_data)
+
+        return {"access_token": token}
  
 
     async def get_user(self, user_id: int, session: AsyncSession):
